@@ -3,7 +3,7 @@
 #*** noz - prevent laptop from sleeping when lid is closed
 #***************************************************************************
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 #***** color scheme *****
 GREEN='\033[1;32m'
@@ -132,6 +132,22 @@ SUDO_PID=$!
 # Track caffeinate PID
 CAFFEINATE_PID=""
 
+# Track tmux state
+TMUX_ACTIVE=""
+TMUX_ORIG_NAME=""
+if [[ -n "$TMUX" ]] && command -v tmux &>/dev/null; then
+    TMUX_ACTIVE=1
+    TMUX_ORIG_NAME=$(tmux display-message -p '#W')
+fi
+
+function tmux_set_title() {
+    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window "$1"
+}
+
+function tmux_restore_title() {
+    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window "$TMUX_ORIG_NAME"
+}
+
 function verify_settings() {
     # Verify disablesleep is actually set
     local disabled=$(pmset -g | grep -i "SleepDisabled" | awk '{print $2}')
@@ -170,6 +186,9 @@ function prevent_sleep() {
 function enable_sleep() {
     # $1: exit_reason - "enter" (0), "timeout" (1), "signal" (2)
     local exit_reason="${1:-signal}"
+
+    #----- restore tmux title -----
+    tmux_restore_title
 
     #----- kill background processes -----
     kill $SUDO_PID 2>/dev/null
@@ -212,6 +231,9 @@ while [[ $remaining -gt 0 ]]; do
 
     # Format time as mm:ss
     printf -v time_str "%02d:%02d" $mins $secs
+
+    # Update tmux window title with bolt + time
+    tmux_set_title "⚡ ${time_str}"
 
     # Print countdown (overwrite in place)
     echo -ne "\r  ${YELLOW}⏱${RESET}  ${BOLD}${time_str}${RESET} remaining   ${DIM}Press Enter to stop${RESET}  "
