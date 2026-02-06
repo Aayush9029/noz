@@ -3,7 +3,7 @@
 #*** noz - prevent laptop from sleeping when lid is closed
 #***************************************************************************
 
-VERSION="1.1.0"
+VERSION="1.2.0"
 
 #***** color scheme *****
 GREEN='\033[1;32m'
@@ -102,6 +102,7 @@ timeout_seconds=$((timeout_minutes * 60))
 #***** print header *****
 echo
 print_header
+print_dim "v${VERSION} · https://github.com/Aayush9029/noz"
 echo
 
 #***** ask for sudo upfront *****
@@ -135,17 +136,19 @@ CAFFEINATE_PID=""
 # Track tmux state
 TMUX_ACTIVE=""
 TMUX_ORIG_NAME=""
+TMUX_TARGET=""
 if [[ -n "$TMUX" ]] && command -v tmux &>/dev/null; then
     TMUX_ACTIVE=1
     TMUX_ORIG_NAME=$(tmux display-message -p '#W')
+    TMUX_TARGET=$(tmux display-message -p '#{session_id}:#{window_id}')
 fi
 
 function tmux_set_title() {
-    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window "$1"
+    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window -t "$TMUX_TARGET" "$1"
 }
 
 function tmux_restore_title() {
-    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window "$TMUX_ORIG_NAME"
+    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window -t "$TMUX_TARGET" "$TMUX_ORIG_NAME"
 }
 
 function verify_settings() {
