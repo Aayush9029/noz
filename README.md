@@ -5,13 +5,13 @@ Prevent your Mac from sleeping when the lid is closed.
 ## Installation
 
 ```bash
-brew install Aayush9029/tap/noz
+brew install aayush9029/tap/noz
 ```
 
 Or tap first:
 
 ```bash
-brew tap Aayush9029/tap
+brew tap aayush9029/tap
 brew install noz
 ```
 
