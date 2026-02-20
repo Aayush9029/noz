@@ -8,13 +8,6 @@ Prevent your Mac from sleeping when the lid is closed.
 brew install aayush9029/tap/noz
 ```
 
-Or tap first:
-
-```bash
-brew tap aayush9029/tap
-brew install noz
-```
-
 ## Usage
 
 ```bash
@@ -33,19 +26,7 @@ Press Enter to stop early, or wait for the timeout (which triggers sleep).
 | `-v, --version` | Show version |
 | `-m, --minutes N` | Duration in minutes (default: 45) |
 
-## How it works
-
-1. Disables system sleep via `pmset`
-2. Runs `caffeinate` as a backup
-3. Shows a live countdown timer
-4. Restores original sleep settings on exit
-5. Optionally triggers sleep when timeout is reached
-
 ## Requirements
 
 - macOS
 - sudo access (for pmset)
-
-## License
-
-MIT
