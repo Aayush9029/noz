@@ -23,3 +23,7 @@ Press Enter to stop early, or wait for the timeout.
 | Flag | Description | Default |
 |------|-------------|---------|
 | `-m, --minutes N` | Duration in minutes | `45` |
+
+---
+
+*More CLI tools: [`brew tap aayush9029/tap`](https://github.com/Aayush9029/homebrew-tap)*
