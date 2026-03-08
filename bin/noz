@@ -3,7 +3,7 @@
 #*** noz - prevent laptop from sleeping when lid is closed
 #***************************************************************************
 
-VERSION="1.2.0"
+VERSION="1.2.1"
 
 #***** color scheme *****
 GREEN='\033[1;32m'
@@ -138,17 +138,22 @@ TMUX_ACTIVE=""
 TMUX_ORIG_NAME=""
 TMUX_TARGET=""
 if [[ -n "$TMUX" ]] && command -v tmux &>/dev/null; then
-    TMUX_ACTIVE=1
-    TMUX_ORIG_NAME=$(tmux display-message -p '#W')
-    TMUX_TARGET=$(tmux display-message -p '#{session_id}:#{window_id}')
+    if TMUX_ORIG_NAME=$(tmux display-message -p '#W' 2>/dev/null) \
+        && TMUX_TARGET=$(tmux display-message -p '#{session_id}:#{window_id}' 2>/dev/null); then
+        TMUX_ACTIVE=1
+    fi
 fi
 
 function tmux_set_title() {
-    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window -t "$TMUX_TARGET" "$1"
+    if [[ -n "$TMUX_ACTIVE" ]] && ! tmux rename-window -t "$TMUX_TARGET" "$1" 2>/dev/null; then
+        TMUX_ACTIVE=""
+    fi
 }
 
 function tmux_restore_title() {
-    [[ -n "$TMUX_ACTIVE" ]] && tmux rename-window -t "$TMUX_TARGET" "$TMUX_ORIG_NAME"
+    if [[ -n "$TMUX_ACTIVE" ]] && ! tmux rename-window -t "$TMUX_TARGET" "$TMUX_ORIG_NAME" 2>/dev/null; then
+        TMUX_ACTIVE=""
+    fi
 }
 
 function verify_settings() {
