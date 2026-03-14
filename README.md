@@ -1,3 +1,5 @@
+<img src="assets/icon.png" width="128" alt="noz">
+
 # noz
 
 Prevent your Mac from sleeping when the lid is closed.
