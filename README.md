@@ -4,6 +4,8 @@
 
 Prevent your Mac from sleeping when the lid is closed.
 
+<p align="center"><img src="assets/demo.gif" alt="noz demo" width="800"></p>
+
 ## Install
 
 ```bash
